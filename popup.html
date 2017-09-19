@@ -5,14 +5,26 @@
     <title>Title</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="jquery-3.2.1.min.js"></script>
-    <script src="background.js"></script>
     <script src="common.js"></script>
 </head>
 <body>
     <div class="global_container popup_window">
-       
-        <button class="btn-template" id='start'>Start bot</button>
-        
+        <form id="percentage_form">
+            <input type="number" class="full_width" id="quantity_per_week" placeholder="Количество продаж в неделю">
+            
+            <div class="grid">
+               <p class="label">Процентный промежуток</p>
+                <div class="pull_left">
+                    <input type="number" id="min_precent">
+                </div>
+                <div class="pull_right">
+                    <input type="number" id="max_precent">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+             
+            <button class="btn-template" id="start">Start</button>
+        </form>
     </div>
 </body>
 </html>

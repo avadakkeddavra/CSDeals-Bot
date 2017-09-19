@@ -1,22 +1,54 @@
-$(document).ready(function(){
-    $('#start').on('click',function(){
-      var xmlHttp = null;
-	  xmlHttp = new XMLHttpRequest();
+//$(document).ready(function(){
+//    $('#start').on('click',function(){
+//        $.ajax({
+//            url:"http://bot.poisk.zp.ua/",
+//            type:'POST',
+//            dataType:'json',
+//            success: function(response){
+//                console.log(response);
+//            }
+//            
+//        })
+//
+//    })
+//    $('#opskins').click(function(){
+//        $.ajax({
+//            url:"http://csgoback.net/api/extension?extension=csgoroll-bot&type=subscription&subType=loadPrice&service=opskins.com&updateTime=360&opskinsMinSales=0&opskinsOnSales=0",
+//            type:'GET',
+//            dataType: 'json',
+//            success: function(response){
+//                console.log(response);
+//            }
+//        })
+//    })
+//    
+//})
 
-	
-		xmlHttp.open("POST","https://ru.cs.deals/ajax/botsinventory",true)		
-		xmlHttp.setRequestHeader('accept', 'application/json, text/javascript, */*; q=0.01t');
-		xmlHttp.setRequestHeader('x-requested-with', 'XMLHttpRequest');
-		
-		
-		
-		xmlHttp.onreadystatechange = function() {
-		  if (xmlHttp.readyState == 4) {
-			 if(xmlHttp.status == 200) {
-			   console.log(xmlHttp.responseText);
-			}
-		  }
-		};
-		xmlHttp.send(null);
-    })
-})
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    var site = request.site; // данные о сайте
+      console.log(sendResponse);
+    var json;
+    if(site == 'CSDeals') 
+    {
+            $.ajax({
+                url:"http://bot.poisk.zp.ua/",
+                type:'POST',
+                dataType:'json',
+                success: function(response){
+                     json = response;
+                }
+
+            });
+
+            $.ajax({
+                url:"http://csgoback.net/api/extension?extension=csgoroll-bot&type=subscription&subType=loadPrice&service=opskins.com&updateTime=360&opskinsMinSales=0&opskinsOnSales=0",
+                type:'GET',
+                dataType: 'json',
+                success: function(response){
+                     json = response;
+                }
+            })
+    }
+    console.log(json);
+});

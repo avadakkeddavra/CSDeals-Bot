@@ -6,20 +6,18 @@
   "permissions": [
     "tabs", // Доступ к объекту Tabs
     "activeTab", // Доступ к объекту ActiveTabs
-	"https://ru.cs.deals/*"
+    "storage",
+    "https://ru.cs.deals/*",
+    "http://bot.poisk.zp.ua/*"
   ],
+    
+  "background": {
+    "scripts": ["jquery-3.2.1.min.js","background.js"]
+  },
+    
+  "optional_permissions": ["https://ru.cs.deals/*","http://bot.poisk.zp.ua/*","http://csgoback.net/api/extension?extension=csgoroll-bot&type=subscription&subType=loadPrice&service=opskins.com&updateTime=360&opskinsMinSales=0&opskinsOnSales=0"],
   "browser_action": {
     "default_title": "Default Title", // Заголовок, который отображается при наведении
     "default_popup": "popup.html"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "http://site.com/*",
-        "https://site.com/*"
-      ],
-      "css": [ "css/style.css" ]
-    }
-  ]
-
+  }
 }
