@@ -3,10 +3,12 @@
 	padding: 0;
 	box-sizing: border-box;
 }
+body{
+    font-family: "Halvetica",sans-serif !important;
+}
 .btn-template{
 	display: block;
     width: 100px;
-    margin: 0 auto;
 	background-color: #3649e8;
 	color: #fff;
 	border:none;
@@ -27,7 +29,7 @@
 }
 .grid{
     display: block;
-    padding: 15px 0px;
+    padding-bottom: 30px;
     .pull_left{
         float: left;
         width: 50%;
@@ -41,19 +43,33 @@
     p.label{
         color: #fff;
         text-transform: uppercase;
+        letter-spacing: 2px ;
         font-size: 12px;
+        color: #ffc400;
         font-weight: bold;
-        text-align: center;
+        
     }
 }
 .global_container{
-	width: 400px;
-	padding: 30px;
-    background-color: #393939;
-    #percentage_form{
+	width: 450px;
+    background-color: #1b1f34;
+    .extension_title{
+        color: #ffc400;
+        text-align: center;
+        padding-top: 30px;
+        font-family:cursive;
+        font-weight: bold;
+    }
+    .form_container{
         display: block;
-        width: 80%;
+        width: 100%;
         margin: 0 auto;
+        padding: 30px;
+    }
+    #percentage_form{
+        padding: 20px;
+        margin-bottom: 30px;
+        background-color: #242943;
         input{
             width: 100%;
             background-color: transparent;
@@ -63,6 +79,7 @@
             height: 40px;
             color: #fff;
             border-bottom: 2px solid #fff;
+            transition: 0.3s ease;
             &.full_width{
                 display: block !important;
                 width: 100%;
@@ -70,7 +87,69 @@
             &::-webkit-input-placeholder{
                 color: #fff;
             }
+            &.inline_input{
+                display: inline-block;
+                width: auto !important;
+            }
+            &:focus{
+                border-bottom-color: #49e868;
+            }
         }
-
+        label{
+                display: inline-block;
+                color: #fff;
+                font-size: 14px;
+                font-weight: bold;
+        }
+        .min_price{
+            padding-bottom: 30px;
+            label{
+                color: #ffc400;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                font-size: 12px;
+            }
+            input{
+                width: 50px !important;
+                text-align: center;
+                font-weight: bold;
+                font-size: 16px;
+            }
+            span{
+                font-weight: bold;
+                color: #ffc400;
+                font-size: 18px;
+            }
+        }
+        .checkbox_view{
+            padding: 30px 0px;
+            input#exists{
+                display: none;
+            }
+            p.desc{
+                display: inline-block;
+                color: #fff;
+                margin-left: 15px;
+                font-size: 14px;
+                font-weight: bold;
+            }
+            label{
+                margin-left: 0;
+                i{
+                    background-color: transparent;
+                    border: none;
+                    outline:none;
+                    box-shadow: none;
+                    font-size: 18px;
+                    color: #d85252;
+                    
+                }
+                &.active_check{
+                    i{
+                        color: #44db84;
+                    }
+                }
+            }
+        }
     }
 }

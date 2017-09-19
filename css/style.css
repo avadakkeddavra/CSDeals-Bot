@@ -4,10 +4,12 @@
   padding: 0;
   box-sizing: border-box;
 }
+body {
+  font-family: "Halvetica", sans-serif !important;
+}
 .btn-template {
   display: block;
   width: 100px;
-  margin: 0 auto;
   background-color: #3649e8;
   color: #fff;
   border: none;
@@ -28,7 +30,7 @@
 }
 .grid {
   display: block;
-  padding: 15px 0px;
+  padding-bottom: 30px;
 }
 .grid .pull_left {
   float: left;
@@ -43,19 +45,32 @@
 .grid p.label {
   color: #fff;
   text-transform: uppercase;
+  letter-spacing: 2px ;
   font-size: 12px;
+  color: #ffc400;
   font-weight: bold;
-  text-align: center;
 }
 .global_container {
-  width: 400px;
+  width: 450px;
+  background-color: #1b1f34;
+}
+.global_container .extension_title {
+  color: #ffc400;
+  text-align: center;
+  padding-top: 30px;
+  font-family: cursive;
+  font-weight: bold;
+}
+.global_container .form_container {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
   padding: 30px;
-  background-color: #393939;
 }
 .global_container #percentage_form {
-  display: block;
-  width: 80%;
-  margin: 0 auto;
+  padding: 20px;
+  margin-bottom: 30px;
+  background-color: #242943;
 }
 .global_container #percentage_form input {
   width: 100%;
@@ -66,6 +81,7 @@
   height: 40px;
   color: #fff;
   border-bottom: 2px solid #fff;
+  transition: 0.3s ease;
 }
 .global_container #percentage_form input.full_width {
   display: block !important;
@@ -73,4 +89,64 @@
 }
 .global_container #percentage_form input::-webkit-input-placeholder {
   color: #fff;
+}
+.global_container #percentage_form input.inline_input {
+  display: inline-block;
+  width: auto !important;
+}
+.global_container #percentage_form input:focus {
+  border-bottom-color: #49e868;
+}
+.global_container #percentage_form label {
+  display: inline-block;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+.global_container #percentage_form .min_price {
+  padding-bottom: 30px;
+}
+.global_container #percentage_form .min_price label {
+  color: #ffc400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+.global_container #percentage_form .min_price input {
+  width: 50px !important;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+.global_container #percentage_form .min_price span {
+  font-weight: bold;
+  color: #ffc400;
+  font-size: 18px;
+}
+.global_container #percentage_form .checkbox_view {
+  padding: 30px 0px;
+}
+.global_container #percentage_form .checkbox_view input#exists {
+  display: none;
+}
+.global_container #percentage_form .checkbox_view p.desc {
+  display: inline-block;
+  color: #fff;
+  margin-left: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.global_container #percentage_form .checkbox_view label {
+  margin-left: 0;
+}
+.global_container #percentage_form .checkbox_view label i {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  font-size: 18px;
+  color: #d85252;
+}
+.global_container #percentage_form .checkbox_view label.active_check i {
+  color: #44db84;
 }

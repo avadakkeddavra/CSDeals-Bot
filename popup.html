@@ -3,28 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.css">
     <link rel="stylesheet" href="css/style.css">
+    
     <script src="jquery-3.2.1.min.js"></script>
     <script src="common.js"></script>
 </head>
 <body>
     <div class="global_container popup_window">
-        <form id="percentage_form">
-            <input type="number" class="full_width" id="quantity_per_week" placeholder="Количество продаж в неделю">
-            
-            <div class="grid">
-               <p class="label">Процентный промежуток</p>
-                <div class="pull_left">
-                    <input type="number" id="min_precent">
-                </div>
-                <div class="pull_right">
-                    <input type="number" id="max_precent">
-                </div>
-                <div class="clearfix"></div>
-            </div>
-             
-            <button class="btn-template" id="start">Start</button>
-        </form>
+    <h2 class="extension_title">CSDeals Bot</h2>
+<div class="form_container">
+                  
+                   <form id="percentage_form">
+                       <input type="number" class="full_width" name="quantity_per_week" id="quantity_per_week" placeholder="Количество продаж в неделю">
+                       <div class="checkbox_view">
+                           <label for="exists"  id="toggle_exists">
+                              <span class="icon"> <i class="fa fa-toggle-off"></i></span>
+                              
+                               <p class="desc">Наличие на сервисе</p>
+                           </label>
+                           <input type="checkbox" name="exists" id="exists">
+                       </div>
+                       <div class="grid">
+                          <p class="label">Процентный промежуток</p>
+                           <div class="pull_left">
+                               <input type="number" name="min_precent" id="min_precent">
+                           </div>
+                           <div class="pull_right">
+                               <input type="number" name="max_precent" id="max_precent">
+                           </div>
+                           <div class="clearfix"></div>
+                       </div>
+                        <div class="min_price">
+                            <label for="min_price">Минимальная цена:</label>
+                            <input type="number" class="inline_input" name="min_price" id="min_price">
+                            <span>$</span>
+                        </div>
+                       <button type="button" class="btn-template" id="start">Start</button>
+                   </form>
+       </div>
+        
     </div>
 </body>
 </html>
