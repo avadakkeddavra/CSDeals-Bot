@@ -5,7 +5,8 @@
   "description" : "Description",
   "permissions": [
     "tabs", // Доступ к объекту Tabs
-    "activeTab" // Доступ к объекту ActiveTabs
+    "activeTab", // Доступ к объекту ActiveTabs
+	"https://ru.cs.deals/*"
   ],
   "browser_action": {
     "default_title": "Default Title", // Заголовок, который отображается при наведении
