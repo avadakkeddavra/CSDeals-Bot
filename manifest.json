@@ -1,1 +1,24 @@
-{  "manifest_version": 2,  "name": "CSDeals Bot",  "version": "0.0.1",  "default_locate" : "en",  "description" : "Description",  "permissions": [    "tabs", // Доступ к объекту Tabs    "activeTab" // Доступ к объекту ActiveTabs  ],  "browser_action": {    "default_title": "Default Title", // Заголовок, который отображается при наведении    "default_popup": "popup.html"  },  "content_scripts": [    {      "matches": [        "http://site.com/*",        "https://site.com/*"      ],      "css": [ "css/style.css" ]    }  ]}
+{
+  "manifest_version": 2,
+  "name": "CSDeals Bot",
+  "version": "0.0.1",
+  "description" : "Description",
+  "permissions": [
+    "tabs", // Доступ к объекту Tabs
+    "activeTab" // Доступ к объекту ActiveTabs
+  ],
+  "browser_action": {
+    "default_title": "Default Title", // Заголовок, который отображается при наведении
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://site.com/*",
+        "https://site.com/*"
+      ],
+      "css": [ "css/style.css" ]
+    }
+  ]
+
+}
