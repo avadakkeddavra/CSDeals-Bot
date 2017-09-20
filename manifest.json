@@ -7,7 +7,7 @@
     "tabs", // Доступ к объекту Tabs
     "activeTab", // Доступ к объекту ActiveTabs
     "storage",
-    "https://ru.cs.deals/*",
+    "http://csgoback.net/api/*",
     "http://bot.poisk.zp.ua/*"
   ],
     
