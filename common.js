@@ -1,6 +1,6 @@
 
 function onClick(options) { // окно теряет фокус
-	chrome.runtime.sendMessage(options); // отправка сообщения на background.js
+	chrome.runtime.sendMessage({options:options}); // отправка сообщения на background.js
 }
 $(document).ready(function(){
     $('#toggle_exists').on('click',function(e){  
@@ -23,17 +23,16 @@ $(document).ready(function(){
             console.log(data);
 
             var quatity_per_week = data[0].value;
-            var options = [];
+            var options = new Object;			
             jQuery.each(data, function(i, item){
                 options[item.name] = item.value;
-                if(i == data.length-1)
-                {
-                        options['opskins_url'] = "http://csgoback.net/api/extension?extension=csgoroll-bot&type=subscription&subType=loadPrice&service=opskins.com&updateTime=360&opskinsMinSales="+quatity_per_week+"&opskinsOnSales=0";
-                    console.log(options);
+            
+			});
+					options['opskins_url'] = "http://csgoback.net/api/extension?extension=csgoroll-bot&type=subscription&subType=loadPrice&service=opskins.com&updateTime=360&opskinsMinSales="+quatity_per_week+"&opskinsOnSales=0";
+					
+					console.log(options);
 
                     onClick(options);
-                }
-            });
 
     })
 })

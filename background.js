@@ -29,8 +29,8 @@ function cut_for_min_price(json, min_price)
 }
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    var site = request; // данные о сайте
-      console.log(site)
+    var site = request.options; // данные о сайте
+      console.log(site.min_price)
             $.ajax({
                 url:"http://bot.poisk.zp.ua/",
                 type:'POST',
