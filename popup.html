@@ -11,35 +11,100 @@
 </head>
 <body>
     <div class="global_container popup_window">
-    <h2 class="extension_title">CSDeals Bot</h2>
-<div class="form_container">
+    <div class="extension_title"><img src="img/logo.webp" alt=""></div>
+    <h4 class="extension_title">CSDeals Bot</h4>
+    <div class="statistics">
+       <div class="statistics_container">
+           <button type="button" class="start btn-template" id="start">Start</button>
+           <div class="grid">
+               <div class="pull_left">
+                   <div class="info_block">
+                       <h4 class="title">На балансе</h4>
+                       <div class="stat"><span class="value">123</span>$</div>
+                   </div>
+                   <div class="info_block">
+                       <h4 class="title">Время работы</h4>
+                       <div class="stat"><span class="value">00:00</span></div>
+                   </div>
+               </div>
+               <div class="pull_right">
+                    <div class="info_block">
+                       <h4 class="title">Выведено</h4>
+                       <div class="stat"><span class="value">1233,8</span>$</div>
+                   </div>
+                    <div class="info_block">
+                       <h4 class="title">Скорость вывода</h4>
+                       <div class="stat"><span class="value">15</span>$ в минуту</div>
+                   </div>
+               </div>
+               <div class="clearfix"></div>
+           </div>
+           <button type="button" id="backup" class="backup_btn">сбросить</button>
+       </div>   
+    </div>
+    <div class="form_container">
                   
-                   <form id="percentage_form">
-                       <input type="number" class="full_width" name="quantity_per_week" id="quantity_per_week" placeholder="Количество продаж в неделю">
-                       <div class="checkbox_view">
-                           <label for="exists"  id="toggle_exists">
-                              <span class="icon"> <i class="fa fa-toggle-off"></i></span>
-                              
-                               <p class="desc">Наличие на сервисе</p>
-                           </label>
-                           <input type="checkbox" name="exists" id="exists">
-                       </div>
-                       <div class="grid">
-                          <p class="label">Процентный промежуток</p>
+                <form id="percentage_form">
+                     <h3>Настройки</h3>
+                     
+                      <div class="grid sales">
                            <div class="pull_left">
-                               <input type="number" name="min_percent" id="min_precent">
+                               <label for="quantity_per_week">От N продаж в неделю Opskins *</label>
+                               <input type="number" class="full_width success" name="quantity_per_week" id="quantity_per_week" value="10">
+                               
                            </div>
                            <div class="pull_right">
-                               <input type="number" name="max_percent" id="max_precent">
+                              <label for="quantity_sales_per_week">От N предметов на продажу в неделю Opskins *</label>
+                               <input type="number" class="full_width success" name="quantity_sales_per_week" id="quantity_sales_per_week" value="0">
                            </div>
                            <div class="clearfix"></div>
                        </div>
-                        <div class="min_price">
-                            <label for="min_price">Минимальная цена:</label>
-                            <input type="number" class="inline_input" name="min_price" id="min_price">
-                            <span>$</span>
+                       
+                        
+                       <div class="grid">
+                          <p class="label">Диапазон % для вывода *</p>
+                           <div class="pull_left">
+                               <input type="number" class="success" name="min_percent" id="min_precent" value="-25">
+                           </div>
+                           <div class="pull_right">
+                               <input type="number" class="success"  name="max_percent" id="max_precent" value="5">
+                           </div>
+                           <div class="clearfix"></div>
+                       </div>
+                       
+                       <div class="grid">
+                          <p class="label">Диапазон цен для вывода *</p>
+                           <div class="pull_left">
+                               <input type="number" class="success" name="min_price" id="min_price" value="0">
+                           </div>
+                           <div class="pull_right">
+                               <input type="number" class="success" name="max_price" id="max_price" value="9999">
+                           </div>
+                           <div class="clearfix"></div>
+                       </div>
+                       
+
+                       
+                        <div class="form_block">
+                            <label for="rate">Rate (милисекунды) *</label>
+                            <input type="number" name="rate" class="full_width success" id="rate" value="4000">
                         </div>
-                       <button type="button" class="btn-template" id="start">Start</button>
+                        
+                        <div class="checkbox_view">
+                           <label for="compare"  id="toggle_exists">
+                              <span class="icon"> <i class="fa fa-toggle-off"></i></span>
+                              
+                               <p class="desc">Сравинить мин. цену и среднюю на Opskins</p>
+                           </label>
+                           <input type="checkbox" name="compare" id="compare">
+                        </div>
+                        
+                        <div class="form_block">
+                            <label for="black_list">Черный список (через ";")</label>
+                            <input type="text" name="black_list" class="full_width" id="black_list">
+                        </div>
+                        
+                       
                    </form>
        </div>
         
