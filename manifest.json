@@ -8,7 +8,9 @@
     "activeTab", // Доступ к объекту ActiveTabs
     "storage",
     "http://csgoback.net/api/*",
-    "http://bot.poisk.zp.ua/*"
+    "https://ru.cs.deals/*",
+    "http://bot.poisk.zp.ua/*",
+    "wss://ru.cs.deals:8443/*"
   ],
     
   "background": {

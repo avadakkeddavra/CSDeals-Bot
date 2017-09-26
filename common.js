@@ -1,6 +1,10 @@
-
+chrome.runtime.sendMessage({options:'give_balance'},function(response){
+     $('#balance').text(response.balance);
+});
 function onClick(options) { // окно теряет фокус
-	chrome.runtime.sendMessage({options:options}); // отправка сообщения на background.js
+	chrome.runtime.sendMessage({options:options},function(response){
+        $('#balance').text(response.balance);
+    }); // отправка сообщения на background.js
 }
 function stop(opt)
 {
@@ -47,13 +51,70 @@ $(document).ready(function(){
         }
     })
 })
+function pad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {str = '0' + str;}
+    return str;
+}
+
+function formatTime(time) {
+    time = time / 10;
+    var min = parseInt(time / 6000),
+        sec = parseInt(time / 100) - (min * 60),
+        hundredths = pad(time - (sec * 100) - (min * 6000), 2);
+    return (min > 0 ? pad(min, 2) : "00") + ":" + pad(sec, 2) + ":" + hundredths;
+}
 
 $(document).ready(function(){
     $('#start').on('click',function(e){
-            e.preventDefault();
+        e.preventDefault();
+        var check = $(this).hasClass('start');
+        var Example1 = new (function() {
+
+        // Stopwatch element on the page
+        var $stopwatch = $('#time');
+
+        // Timer speed in milliseconds
+        var incrementTime = 70;
+
+        // Current timer position in milliseconds
+        var currentTime = 0;
+
+        // Start the timer
+
+        
+       
+        // Output time and increment
+        function updateTimer() {
+            var timeString = formatTime(currentTime);
+            $stopwatch.html(timeString);
+            currentTime += incrementTime;
+        }
+
+        // Reset timer
+        this.resetStopwatch = function() {
+            currentTime = 0;
+            Example1.Timer.stop().once();
+        };
+        
+   
+            
+     
+            $(function() {
+                if(check == true)
+                {
+                    Example1.Timer = $.timer(updateTimer, incrementTime, true); 
+                }else{
+                    currentTime = 0;
+                    Example1.Timer.stop();
+                }
+                 
+            });  
+        
+    }); 
+        
         if($(this).hasClass('start'))
         {
-                
             $(this).addClass('stop');
             $(this).removeClass('start');
             $(this).text('Stop');
@@ -79,6 +140,7 @@ $(document).ready(function(){
                 }
         }else{
             console.log('func');
+           // Example1.Timer.resetStopwatch();
             var st = 1;
             var options = new Object;			
             options.rate = 0;
@@ -90,5 +152,6 @@ $(document).ready(function(){
         }
 
     })
+
 })
 

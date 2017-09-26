@@ -8,6 +8,7 @@
     
     <script src="jquery-3.2.1.min.js"></script>
     <script src="common.js"></script>
+    <script src="jquery.timer.js"></script>
 </head>
 <body>
     <div class="global_container popup_window">
@@ -20,11 +21,11 @@
                <div class="pull_left">
                    <div class="info_block">
                        <h4 class="title">На балансе</h4>
-                       <div class="stat"><span class="value">123</span>$</div>
+                       <div class="stat"><span class="value" id="balance"></span>$</div>
                    </div>
                    <div class="info_block">
                        <h4 class="title">Время работы</h4>
-                       <div class="stat"><span class="value">00:00</span></div>
+                       <div class="stat" id='time'>00:00</div>
                    </div>
                </div>
                <div class="pull_right">
