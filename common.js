@@ -1,11 +1,31 @@
 chrome.runtime.sendMessage({options:'give_balance'},function(response){
      $('#balance').text(response.balance);
-});
-function onClick(options) { // окно теряет фокус
+}); 
+$(document).ready(function(){
+     chrome.runtime.sendMessage({options:'give_balance',checkbot:true},function(response){
+     $('#balance').text(response.balance);
+       
+     if(response.bot_in_work == true)
+     {
+        $('#start').removeClass('start');
+         $('#start').addClass('stop');
+         $('#start').text('Stop')
+     }
+   }); 
+})
+
+//chrome.runtime.onMessage.addListener(function(requset,sender,sendResponse){
+//    alert(response);
+//})
+function onClick(options) {
 	chrome.runtime.sendMessage({options:options},function(response){
         $('#balance').text(response.balance);
+        console.log(response);
     }); // отправка сообщения на background.js
 }
+
+  
+
 function stop(opt)
 {
     chrome.runtime.sendMessage({options:opt}); // отправка сообщения на background.js
@@ -64,60 +84,35 @@ function formatTime(time) {
         hundredths = pad(time - (sec * 100) - (min * 6000), 2);
     return (min > 0 ? pad(min, 2) : "00") + ":" + pad(sec, 2) + ":" + hundredths;
 }
-
+function updateTimer() {
+    
+     var $stopwatch = $('#time');
+     var currentTime = 0;
+     var incrementTime = 70;
+     var timeString = formatTime(currentTime);
+        $stopwatch.html(timeString);
+        currentTime += incrementTime;
+}
+function getCookie(name) {
+  var matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
 $(document).ready(function(){
     $('#start').on('click',function(e){
         e.preventDefault();
-        var check = $(this).hasClass('start');
-        var Example1 = new (function() {
-
-        // Stopwatch element on the page
-        var $stopwatch = $('#time');
-
-        // Timer speed in milliseconds
-        var incrementTime = 70;
-
-        // Current timer position in milliseconds
-        var currentTime = 0;
-
-        // Start the timer
-
-        
        
-        // Output time and increment
-        function updateTimer() {
-            var timeString = formatTime(currentTime);
-            $stopwatch.html(timeString);
-            currentTime += incrementTime;
-        }
-
-        // Reset timer
-        this.resetStopwatch = function() {
-            currentTime = 0;
-            Example1.Timer.stop().once();
-        };
-        
-   
-            
-     
-            $(function() {
-                if(check == true)
-                {
-                    Example1.Timer = $.timer(updateTimer, incrementTime, true); 
-                }else{
-                    currentTime = 0;
-                    Example1.Timer.stop();
-                }
-                 
-            });  
-        
-    }); 
+        var check = $(this).hasClass('start');
+        $('#time').runner('start');
         
         if($(this).hasClass('start'))
         {
+            //$('#time').runner('start');
             $(this).addClass('stop');
             $(this).removeClass('start');
             $(this).text('Stop');
+            
             var data = $('#percentage_form').serializeArray();
 
                 var quatity_per_week = data[0].value;
@@ -138,9 +133,16 @@ $(document).ready(function(){
                 {
                     onClick(options);
                 }
+            if(localStorage.getItem('not_found')){
+                
+                $(this).removeClass('stop');
+                $(this).addClass('start');
+                $(this).text('Start')
+                alert(localStorage.getItem('not_found') );
+            }
+            
         }else{
             console.log('func');
-           // Example1.Timer.resetStopwatch();
             var st = 1;
             var options = new Object;			
             options.rate = 0;
@@ -152,6 +154,8 @@ $(document).ready(function(){
         }
 
     })
-
+    $(".stop").click(function(){
+        
+    })
 })
 

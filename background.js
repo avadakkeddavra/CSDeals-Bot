@@ -81,10 +81,12 @@ function resort_cs_deals(json, options)
     
     $.each(quantity_items,function(i,elem){
         var id = elem.m;
-        var current_id = elem.a;;
+        var current_id = elem.a;
         var z = 0;
         if(cs_deals_cleared[id])
-        {
+            console.log(id);
+        {       console.log(elem,cs_deals_cleared[id]);
+                
                 var quant = cs_deals_cleared[id].quantity;
                 cs_deals_cleared[id].quantity = quant+1;
                 var string_id = cs_deals_cleared[id].ids_array;
@@ -239,35 +241,140 @@ function price_checking(all_in_one,options)
 
         }
     }
+    console.log(final_collection);
     return final_collection;
 }
 
 function bot_start(options){
-    send_cs_deals_request();
+            send_cs_deals_request();
                   // formating the cs_deals json array
                     var cs_deals_json = JSON.parse(localStorage.getItem("cs_deals_json"));
+                console.log(cs_deals_json);
                     var cs_deals_cleared = resort_cs_deals(cs_deals_json,options); 
                     console.log(cs_deals_cleared);
-                    for(var i = 0; i < cs_deals_cleared.length; i++)
-                    {
-                        if(cs_deals_cleared[i].m == 'P2000 | Ivory (Minimal Wear)')
-                            {
-                                console.log(cs_deals_cleared[i]);
-                            }
-                    }
+            for(var i = 0 ; i  < cs_deals_cleared.length; i++)
+                {
+                    if(cs_deals_cleared[i].m == 'UMP-45 | Corporal (Minimal Wear)')
+                        {
+                            console.log(cs_deals_cleared[i]);
+                        }else{
+                            console.log('not_found')
+                        }
+                }
             send_opskins_request(options.opskins_url,false);
 
                   // fromating the opskins json array
                   var opskins_json = JSON.parse(localStorage.getItem("opskins_json")); 
-                   console.log(opskins_json);
+                   //console.log(opskins_json);
                   var opskins_cleared_json = restore_opskins(opskins_json,options);
-                  console.log(opskins_cleared_json);
+                  //console.log(opskins_cleared_json);
 
                   // compearing two arrays
                   var all_in_arr = arrays_compare(opskins_cleared_json,cs_deals_cleared);
                  // first checkeng
                  var final = price_checking(all_in_arr,options);
-                  console.log(final);
+                  //console.log(final);
+                var bots = [];
+                
+                var k = 0; 
+                for(var i = 1; i < 16; i++)
+                {
+                    var bot = i;
+                    for(var j = 0; j < final.length; j++)
+                    {
+                        if(final[j].b == i)
+                        {
+                            var data =  new Array;
+                            data.bot = bot;
+                            if(final[j].ids_array)
+                            {
+                                data.ids = final[j].a+','+final[j].ids_array;
+                            }else{
+//                                var ids_arr = final[j].a;
+//                                
+//                                if($.isArray(ids_arr) == true){
+//                                   
+//                                   var ids_string = '';
+//                                    for(var z = 0; z < ids_arr.length; z++)
+//                                    {
+//                                        ids_string += ids_arr[z]+','; 
+//                                    }
+//                                    data.ids = ids_string;
+//                                }else{
+//                                    
+//                                }
+                                data.ids = final[j].a;
+                            }
+                           
+                            bots[k] = data;
+                         
+                           k++
+                        }
+                    }
+                }
+    var data  = new Array;
+    var  k = 0;
+    for(var i = 0; i < 15; i++)
+    { 
+        data[i] = '';
+        for(var j = 0; j < bots.length; j++)
+        {
+            if(bots[j].bot == i+1)
+            {
+                //console.log(bots[j].ids);
+                data[i] += bots[j].ids+',';        
+            }
+        }
+        
+    }
+    var trade_arr = [];
+    var j = 0;
+    for(var i = 0;i < data.length; i++)
+    {
+        if(data[i] != '')
+            {
+                var data_arr =[];
+                data_arr.bot = i;
+                data_arr.ids = data[i];
+                trade_arr[j] = data_arr;
+                //console.log(data_arr);
+                j++;
+            }
+    }
+    
+       
+    
+   
+        
+        //trade(trade_arr,options);
+    
+}
+function trade(trade_arr,options)
+{       
+   console.log(trade_arr);
+  if(trade_arr.length != 0)
+  {
+        var i = 0;
+        var tradeInt = setInterval(function(){  
+            console.log(trade_arr[i]);
+        $.ajax({
+                url: 'http://bot.poisk.zp.ua/trade.php',
+                data: "bot="+trade_arr[i].bot+"&ids="+trade_arr[i].ids,
+                type: "POST",
+                success: function(response)
+                {
+                    console.log(response);
+                }
+        })
+        i++;
+       if(i == trade_arr.length){
+           clearInterval(tradeInt);
+       }
+    },options.rate);
+  }else{
+      bot_start();
+  }
+
 }
 function bot_stop(init)
 {
@@ -283,63 +390,51 @@ function getStat()
         {
            localStorage.setItem('balance',response);
         }
-    })
+    });
+    
 }
-chrome.runtime.onMessage.addListener(
+var listener = chrome.runtime.onMessage.addListener(
     
   function(request, sender, sendResponse) {
     var options = request.options; // данные о сайте
     var stop = request.options;
-      
+    getStat();
+
       if(options == 'give_balance')
         {
-            getStat();
+            
+                    if(request.checkbot == true)
+                    {
+                        if(localStorage.getItem('interval'))
+                        {
+                            sendResponse({'bot_in_work':true});
+                            sendResponse({'balance': localStorage.getItem('balance'),'bot_in_work':true});
+                        }else{
+                            sendResponse({'balance': localStorage.getItem('balance'),'bot_in_work':false});
+                        }
+                    }
             sendResponse({'balance': localStorage.getItem('balance')});
         }else{
             
                   if(options.stop != 1)
                   { 
                       console.log('BOT START');
-                      var init = setInterval(function(){
 
-                            bot_start(options);
-                            //console.log('bot_start');
-                        },options.rate);
+                        bot_start(options);
+                            
                         getStat();
-                        sendResponse({'balance': localStorage.getItem('balance')});
-                        localStorage.setItem("interval", init);
+                        sendResponse({'balance': localStorage.getItem('balance'), 'in_work':true});
+  
                   }else{
-                     var int = localStorage.getItem("interval")
-                            clearInterval(int);  
+                        var int = localStorage.getItem("interval")
+                        clearInterval(int);  
+                        localStorage.removeItem('interval');
                         console.log('bot_stop');
                   }
         }
 
       
-//      var socket = new WebSocket("wss://ru.cs.deals:8443");
-//      
-//      socket.onopen = function() {
-//          alert("Соединение установлено.");
-//        };
-//      socket.onclose = function(){
-//          alert('close');
-//      }
-//      socket.onmessage = function(event) {
-//          alert("Получены данные " + event.data);
-//        };
-//      
-//      socket.onerror = function(error) {
-//          console.log(error);
-//        };
 
-      
-//    [8,"nc86m9snsn4vkcmupf0jh7eg1v",{"type":"offchange","id":"2516947375","msg":"Trade completed","class":"success","accepted":true,"pricein":0}]
-//
-//           
-//    [8,"nc86m9snsn4vkcmupf0jh7eg1v",{"type":"offers","msg":[{"id":"2516947375","conf":0,"btcamount":"0.00000000","usdamount":"0.00","btcaddress":"","u":0,"b":1}]}]
-//      
-//      
-//    [8,"nc86m9snsn4vkcmupf0jh7eg1v",{"type":"offers","msg":[{"id":"2516947375","conf":1,"btcamount":"0.00000000","usdamount":"0.00","btcaddress":"","u":0,"b":1}]}]
         
   
 
