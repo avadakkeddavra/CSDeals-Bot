@@ -27,6 +27,10 @@ body{
         background-color: #d85151;
         border-bottom: 3px solid #f27777;
     }
+    &.disabled{
+        background-color: #95b2a6;
+        cursor: not-allowed;
+    }
 }
 .backup_btn{
     display: block;
@@ -127,7 +131,7 @@ body{
                 width: 100%;
             }
             &::-webkit-input-placeholder{
-                color: #fff;
+                color: #000;
             }
             &.inline_input{
                 display: inline-block;
@@ -174,6 +178,20 @@ body{
                 font-weight: bold;
                 color: #ffc400;
                 font-size: 18px;
+            }
+        }
+        .token{
+            label{
+                color: #d95858;
+                font-size: 15px;
+                font-weight: bold;
+            }
+            p{
+                padding: 5px 0px;
+                color: #fff;
+            }
+            a{
+                color: #49e868;
             }
         }
         .checkbox_view{

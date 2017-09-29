@@ -29,6 +29,10 @@ body {
   background-color: #d85151;
   border-bottom: 3px solid #f27777;
 }
+.btn-template.disabled {
+  background-color: #95b2a6;
+  cursor: not-allowed;
+}
 .backup_btn {
   display: block;
   width: 100px;
@@ -130,7 +134,7 @@ body {
   width: 100%;
 }
 .global_container #percentage_form input::-webkit-input-placeholder {
-  color: #fff;
+  color: #000;
 }
 .global_container #percentage_form input.inline_input {
   display: inline-block;
@@ -174,6 +178,18 @@ body {
   font-weight: bold;
   color: #ffc400;
   font-size: 18px;
+}
+.global_container #percentage_form .token label {
+  color: #d95858;
+  font-size: 15px;
+  font-weight: bold;
+}
+.global_container #percentage_form .token p {
+  padding: 5px 0px;
+  color: #fff;
+}
+.global_container #percentage_form .token a {
+  color: #49e868;
 }
 .global_container #percentage_form .checkbox_view {
   padding: 10px 0px;

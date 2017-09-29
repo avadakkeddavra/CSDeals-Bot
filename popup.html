@@ -49,6 +49,14 @@
                 <form id="percentage_form">
                      <h3>Настройки</h3>
                      
+                     <div class="form_block token">
+                            <label for="token">Токен доступа</label>
+                            <p>Для того чтобы получить токен вы должны быть авторизированы на cs.deals</p>
+                            <p>Также вам понадобиться расширение для Chrome <a href="https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg?hl=ru">Edit this cookie</a> установите его</p>
+                            <p>После авторизации на cs.deals включите расширение EditCookie и скопируйте параметр <b>sessionID</b> это и есть ваш токен (При этом вы должны находиться на сайте cs.deals) </p>
+                            <input type="text" name="token" class="full_width" id="token" placeholder="Укажите токен">
+                     </div>
+                     
                       <div class="grid sales">
                            <div class="pull_left">
                                <label for="quantity_per_week">От N продаж в неделю Opskins *</label>
@@ -89,7 +97,7 @@
                        
                         <div class="form_block">
                             <label for="rate">Rate (милисекунды) *</label>
-                            <input type="number" name="rate" class="full_width success" id="rate" value="4000">
+                            <input type="number" name="rate" class="full_width success" id="rate" value="10000">
                         </div>
                         
                         <div class="checkbox_view">

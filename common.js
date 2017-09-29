@@ -11,7 +11,8 @@ $(document).ready(function(){
          $('#start').addClass('stop');
          $('#start').text('Stop')
      }
-   }); 
+   });
+   
 })
 
 //chrome.runtime.onMessage.addListener(function(requset,sender,sendResponse){
@@ -41,7 +42,23 @@ $(document).ready(function(){
     $('#percentage_form input').not("[type='checkbox']").unbind().on('blur',function(){
       var type = $(this).attr('type');
       var value = $(this).val();
-      
+      var id = $(this).attr('id');
+    if(id == 'token')
+    {    console.log($(this));
+        if(value.length != 0)
+        {
+            $(this).addClass('success');
+            $(this).removeClass('error');
+            $(this).parent().find('span').remove();
+            $('#start').removeAttr('disabled');
+            $('#start').removeClass('disabled');
+        }else{
+            $('#start').attr('disabled','disabled');
+            $('#start').addClass('disabled');
+            $(this).addClass('error');
+            $(this).parent().append('<span style="color:red">Необходимо указать токен</span>');
+        }
+    }else{
       switch (type)
       {
           case 'number':
@@ -50,12 +67,18 @@ $(document).ready(function(){
                 $(this).addClass('success');
                 $(this).removeClass('error');
                 $(this).parent().find('span').remove();
+                $('#start').removeAttr('disabled');
+                $('#start').removeClass('disabled');
             }else{
+                 $('#start').attr('disabled','disabled');
+                $('#start').addClass('disabled');
                 $(this).addClass('error');
                 $(this).parent().append('<span style="color:red">Это поле обязательно для заполнения</span>');
             }
           break;
       }
+    }
+
     })
 })
 
@@ -133,6 +156,7 @@ $(document).ready(function(){
                 {
                     onClick(options);
                 }
+            console.log(chrome.extension.getBackgroundPage().status)
             if(localStorage.getItem('not_found')){
                 
                 $(this).removeClass('stop');
