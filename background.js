@@ -17,7 +17,7 @@ function send_cs_deals_request()
 
             });
 }
-function send_opskins_request(url,avg)
+function send_opskins_request(url)
 {
         $.ajax({
                 url:url,
@@ -25,12 +25,9 @@ function send_opskins_request(url,avg)
                 dataType: 'json',
                 success: function(response_opskins){
                     var data = JSON.stringify(response_opskins)
-                    if(avg == true)
-                    {
-                        localStorage.setItem("opskins_avg_json", data);    
-                    }else{
+
                         localStorage.setItem("opskins_json", data);
-                    }
+                    
                     
                     
                 }
@@ -61,6 +58,9 @@ function resort_cs_deals(json, options)
     console.log(options);
     
     $.each(array,function(i,elem){
+            var data = elem;
+            data.bots_array = [];
+            array[i] = data;
             if($.isNumeric(elem.m))
             {
                 if(elem.v < min_price || elem.v > max_price || $.inArray(elem.t,wrong_types) != -1 )
@@ -287,39 +287,28 @@ function price_checking(all_in_one,options)
     return final_collection;
 }
 
+/*
+
+    STARTS THE BOT
+
+*/
 function bot_start(options,status){
     localStorage.setItem('status',1);
+    
     if(status == 'start')
     {
-                            send_cs_deals_request();
-                          // formating the cs_deals json array
-                            var cs_deals_json = JSON.parse(localStorage.getItem("cs_deals_json"));
-                        for(var i = 0; i < cs_deals_json.response.length; i++)
-                            {
-                                var data = cs_deals_json.response[i];
-                                data.bots_array = [];
-                                cs_deals_json.response[i] = data;
-                            }
 
+                          // formating the cs_deals json array
+                        var cs_deals_json = JSON.parse(localStorage.getItem("cs_deals_json"));;
                         console.log(cs_deals_json);
-                            var cs_deals_cleared = resort_cs_deals(cs_deals_json,options); 
-                           // console.log(cs_deals_cleared);
-        //            for(var i = 0 ; i  < cs_deals_cleared.length; i++)
-        //                {
-        //                    if(cs_deals_cleared[i].m == 'UMP-45 | Corporal (Minimal Wear)')
-        //                        {
-        //                            console.log(cs_deals_cleared[i]);
-        //                        }else{
-        //                            console.log('not_found')
-        //                        }
-        //                }
-                    send_opskins_request(options.opskins_url,false);
+                        var cs_deals_cleared = resort_cs_deals(cs_deals_json,options);
+
 
                           // fromating the opskins json array
                           var opskins_json = JSON.parse(localStorage.getItem("opskins_json")); 
-                           //console.log(opskins_json);
+                          console.log(opskins_json);
                           var opskins_cleared_json = restore_opskins(opskins_json,options);
-                          //console.log(opskins_cleared_json);
+                          console.log(opskins_cleared_json);
 
                           // compearing two arrays
                           var all_in_arr = arrays_compare(opskins_cleared_json,cs_deals_cleared);
@@ -334,6 +323,7 @@ function bot_start(options,status){
                              bots[i][length] = {bot:final[i].b,id:final[i].a};
                         }
                         console.log(bots);
+        
         if(bots.length != 0)
         {
               var bots_sorted = [];
@@ -361,29 +351,34 @@ function bot_start(options,status){
             trade(bots_sorted,options);  
         }else{
             console.log('nothing to trade')
-            bot_start(options,'start');
+            start(options);
         }
     
     }else{
         localStorage.setItem('status',0);
     }
 
-   
+  
 }
+/*
 
+    THE MAIN OUTPUT FUNCTION FROM CS.DEALS
+
+*/
 function trade(trade_arr,options)
 {       
+  console.log(trade_arr);
   var rate = options.rate;
   var current_rate = rate;
   if(trade_arr.length != 0)
   {
-      console.log(options.token)
+      console.log(options.rate)
         var i = 1;
         
         var tradeInt = setInterval(function(){  
             if(trade_arr[i] != "")
             {
-                console.log(i,trade_arr[i].slice(0,-1));              
+                console.log(i,trade_arr[i]);              
                 $.ajax({
                         url: 'http://bot.poisk.zp.ua/trade.php',
                         data: "token="+options.token+"&bot="+i+"&ids="+trade_arr[i],
@@ -391,37 +386,55 @@ function trade(trade_arr,options)
                         dataType:'json',
                         success: function(response)
                         {
-                            console.log(response.success,response.error);
+                            console.log(response);
                             if(response.success == true){
-                                current_rate = current_rate+4000;
-                                var current_cash = localStorage.getItem('current_balance');
-                                var cash = localStorage.getItem('');
+                                getCash();
+                                setTimeout(function(){
+                                    var current_cash = Number(localStorage.getItem('current_balance'));
+                                    var cash = Number(localStorage.getItem('start_balance'));
+                                    localStorage.setItem('balance',current_cash);
+                                    console.log(cash, current_cash);                                 
+                                    localStorage.setItem('output',Number(cash - current_cash).toFixed(3));
+                                    localStorage.setItem('output_speed',Number((cash-current_cash)/60).toFixed(3));
+                                },1000)
+                                
                              }
+                        },
+                        error: function(xhr){
+                            console.log(xhr);
                         }
                 })
             }
 
         i++;
        if(i == trade_arr.length){
-           localStorage.remoceItem('interval')
+           console.log("bot_end");
+           localStorage.removeItem('interval')
            clearInterval(tradeInt);
-           bot_start(options,'start');
+           start(options,'start');
            
        }
-    },current_rate);
+    },options.rate);
       localStorage.setItem('interval',tradeInt);
   }
 
 }
-function bot_stop(init)
-{
-    clearInterval(init);
+
+/*
+
+    STOPS THE BOT OUTPUT INTERVAL
     
+*/
+function bot_stop()
+{
+    localStorage.setItem('status',0);
 }
+
 function getCash(){
     
        $.ajax({
         url:'http://bot.poisk.zp.ua/stat.php',
+        data:'sessionID='+localStorage.getItem('token'),
         type:"POST",
         success: function(response)
         {
@@ -430,18 +443,65 @@ function getCash(){
     });
     
 }
+/*
+    
+    THIS FUNCTION RETURN THE CUURENT BALANCE OF USER
+    
+*/
 function getStat()
 {
     $.ajax({
         url:'http://bot.poisk.zp.ua/stat.php',
         type:"POST",
+        data:'sessionID='+localStorage.getItem('token'),
         success: function(response)
         {
            localStorage.setItem('balance',response);
+           localStorage.setItem('start_balance',response);
+            
         }
     });
     
 }
+/*
+    THIS FUNCTIONS IS A CONTROLLER OF BACKGROUND TIMER
+
+*/
+function timer(){
+    var valuefd;
+    if(localStorage.getItem('bg_timer')){
+        var value = localStorage.getItem('bg_timer');
+    }else{
+        value = 0;
+    }
+    var bg_timer = setInterval(function(){
+        value++;
+        localStorage.setItem('bg_timer',value);
+    },1000);
+    
+    localStorage.setItem('bg_indx_timer',bg_timer);
+}
+
+/**
+
+    THIS FUNCTION SENDS REQUESTS TO SERVICES AND STARTS A BOT;
+
+*/
+function start(options){
+    localStorage.setItem('status',1);
+    send_cs_deals_request();
+    send_opskins_request(options.opskins_url,false);
+                      
+     setTimeout(function(){
+             bot_start(options,'start');
+     },10000);
+}
+
+/*
+
+    LISTENER OF MESSAGES FROM common.js
+
+*/
 var listener = chrome.runtime.onMessage.addListener(
     
   function(request, sender, sendResponse) {
@@ -456,7 +516,6 @@ var listener = chrome.runtime.onMessage.addListener(
                     {
                         if(localStorage.getItem('status') == 1)
                         {
-                            sendResponse({'bot_in_work':true});
                             sendResponse({'balance': localStorage.getItem('balance'),'bot_in_work':true});
                         }else{
                             sendResponse({'balance': localStorage.getItem('balance'),'bot_in_work':false});
@@ -468,17 +527,21 @@ var listener = chrome.runtime.onMessage.addListener(
                   if(options.stop != 1)
                   { 
                       console.log('BOT START');
-
-                        bot_start(options,'start');
-                            
+                      
+                        start(options);
+             
                         getStat();
+                        timer();
                         sendResponse({'balance': localStorage.getItem('balance'), 'in_work':true});
   
                   }else{
                         var int = localStorage.getItem("interval")
                         clearInterval(int);  
                         localStorage.removeItem('interval');
-                        bot_start(options,'stop');
+                        bot_stop();
+                        var stop_timer = localStorage.getItem('bg_indx_timer');
+                        //localStorage.removeItem('bg_timer');
+                        clearInterval(stop_timer);
                         console.log('bot_stop');
                   }
         }

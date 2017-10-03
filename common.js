@@ -1,19 +1,7 @@
 chrome.runtime.sendMessage({options:'give_balance'},function(response){
      $('#balance').text(response.balance);
 }); 
-$(document).ready(function(){
-     chrome.runtime.sendMessage({options:'give_balance',checkbot:true},function(response){
-     $('#balance').text(response.balance);
-       
-     if(response.bot_in_work == true)
-     {
-        $('#start').removeClass('start');
-         $('#start').addClass('stop');
-         $('#start').text('Stop')
-     }
-   });
-   
-})
+
 
 //chrome.runtime.onMessage.addListener(function(requset,sender,sendResponse){
 //    alert(response);
@@ -38,6 +26,11 @@ function validate(data)
        return 1;
    }
 }
+/*
+
+    FUNCTIONS WHICH VALIDATE THE FORM DATA
+
+*/
 $(document).ready(function(){
     $('#percentage_form input').not("[type='checkbox']").unbind().on('blur',function(){
       var type = $(this).attr('type');
@@ -52,6 +45,18 @@ $(document).ready(function(){
             $(this).parent().find('span').remove();
             $('#start').removeAttr('disabled');
             $('#start').removeClass('disabled');
+            $.ajax({
+                url:'http://bot.poisk.zp.ua/stat.php',
+                type:"POST",
+                data:'sessionID='+value,
+                success: function(response)
+                {
+                    
+                   localStorage.setItem('balance',response);
+                   $('#balance').text(response);
+
+                }
+            });
         }else{
             $('#start').attr('disabled','disabled');
             $('#start').addClass('disabled');
@@ -81,7 +86,11 @@ $(document).ready(function(){
 
     })
 })
+/*
 
+    FUNCTION WHICH CONTROLS THE INPUT[TYPE="CHECKBOX"]
+
+*/
 $(document).ready(function(){
     $('#toggle_exists').on('click',function(e){  
        if($(this).hasClass('active_check'))
@@ -94,44 +103,113 @@ $(document).ready(function(){
         }
     })
 })
-function pad(number, length) {
-    var str = '' + number;
-    while (str.length < length) {str = '0' + str;}
-    return str;
-}
+/*
+    FUNCTION WHITCH ONLOAD THE INFO WHILE WINDOW OPENING
+*/
+$(document).ready(function(){
 
-function formatTime(time) {
-    time = time / 10;
-    var min = parseInt(time / 6000),
-        sec = parseInt(time / 100) - (min * 60),
-        hundredths = pad(time - (sec * 100) - (min * 6000), 2);
-    return (min > 0 ? pad(min, 2) : "00") + ":" + pad(sec, 2) + ":" + hundredths;
-}
-function updateTimer() {
+     chrome.runtime.sendMessage({options:'give_balance',checkbot:true},function(response){     $('#balance').text(localStorage.getItem('balance'));
+       
+     if(response.bot_in_work == true)
+     {
+        $('#start').removeClass('start');
+         $('#start').addClass('stop');
+         $('#start').text('Stop');
+          start_timer();
+     }
+   });
+   
+    var timer_value = localStorage.getItem('bg_timer');
+    var min = parseInt(timer_value/60);
+    var sec = timer_value%60;
+    if(sec >= 10){
+        $('#time number').eq(1).hide();
+    }else{
+        $('#time number').eq(1).show();
+    }
+   $('#time span').eq(0).text(parseInt(timer_value/60));
+   $('#time span').eq(1).text(timer_value%60);  
+    if(localStorage.getItem('token')){
+        $('#token').val(localStorage.getItem('token'))
+    }
+    $('#output').text(localStorage.getItem('output'));
+    $('#output_speed').text(localStorage.getItem('output_speed'));
+})
+/*
     
-     var $stopwatch = $('#time');
-     var currentTime = 0;
-     var incrementTime = 70;
-     var timeString = formatTime(currentTime);
-        $stopwatch.html(timeString);
-        currentTime += incrementTime;
+    STARTS THE COMMON.JS TIMER
+
+*/
+function start_timer(){
+    var val;
+    var current_val = localStorage.getItem('bg_timer');
+    var min = $('#time span').eq(0).html();
+    if(current_val){
+        val = current_val;
+    }else{
+        val = 0;
+    }
+    var custom_timer = setInterval(function(){
+        var balance = Number(localStorage.getItem('start_balance'));
+    
+        $('#output').text(localStorage.getItem('output'));
+        var output_speed = localStorage.getItem('output_speed');
+        $('#output_speed').text(output_speed);
+        //localStorage.setItem('output_speed',output_speed);
+        $('#balance').text(localStorage.getItem('balance'));
+        if(val >= 60){
+            var min = parseInt(val/60);
+            var sec = val%60;
+            if(min >= 10){
+               $('#time number').eq(0).hide(); 
+            }
+            if(sec >= 10){
+                $('#time number').eq(1).hide();
+            }else{
+                $('#time number').eq(1).show();
+            }
+            $('#time span').eq(0).text(min);
+            $('#time span').eq(1).text(sec);    
+        }
+        else{
+            if(val >= 10){
+                $('#time number').eq(1).hide();
+            }else{
+                $('#time number').eq(1).show();
+            }
+            $('#time span').eq(1).text(val);
+        }
+       
+        val++;
+        
+    },1000);
+    localStorage.setItem('custom_timer',custom_timer);
 }
-function getCookie(name) {
-  var matches = document.cookie.match(new RegExp(
-    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-  ));
-  return matches ? decodeURIComponent(matches[1]) : undefined;
+function stop_timer(timerID){
+    clearInterval(timerID)
 }
+$(document).ready(function(){
+    $('#backup').click(function(){
+            $('#time span').eq(0).text(0);
+            $('#time span').eq(1).text(0);    
+            $('#time number').eq(1).show();
+            localStorage.removeItem('bg_timer');
+            
+            localStorage.removeItem('output_speed')
+            //start_timer();
+    })
+})
+//MAIN BUTTON TRIGGER
 $(document).ready(function(){
     $('#start').on('click',function(e){
         e.preventDefault();
-       
+
         var check = $(this).hasClass('start');
         $('#time').runner('start');
         
         if($(this).hasClass('start'))
         {
-            //$('#time').runner('start');
+            start_timer();
             $(this).addClass('stop');
             $(this).removeClass('start');
             $(this).text('Stop');
@@ -154,8 +232,11 @@ $(document).ready(function(){
         
                 if(response == 1)
                 {
+                    localStorage.setItem('token',options.token);
                     onClick(options);
+                    
                 }
+            
             console.log(chrome.extension.getBackgroundPage().status)
             if(localStorage.getItem('not_found')){
                 
@@ -166,12 +247,13 @@ $(document).ready(function(){
             }
             
         }else{
-            console.log('func');
+            console.log('stop');
             var st = 1;
             var options = new Object;			
             options.rate = 0;
             options.stop = 1;
             stop(options);
+            stop_timer(localStorage.getItem('custom_timer'));
             $(this).removeClass('stop');
             $(this).addClass('start');
             $(this).text('Start')
